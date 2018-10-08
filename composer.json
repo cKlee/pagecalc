@@ -1,0 +1,26 @@
+{
+    "name": "ck/pagecalc",
+    "type": "library",
+    "description": "Calculates page numbers and cursors of paged results",
+    "keywords": [ "pagination", "page", "api", "paginator", "page number" ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carsten Klee",
+            "homepage": "http://collidoscope.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.0"
+    },
+    "require-dev": {
+         "phpunit/phpunit": "^5.7 | ^6"
+    },
+    "autoload": {
+        "psr-0": {"CK": "src/"}
+    },
+    "autoload-dev": {
+        "psr-0": {"CK\\Tests": "test/"}
+    }
+}
