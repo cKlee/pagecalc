@@ -29,13 +29,13 @@ class PageCalc {
      * 
      * @param int $limit  Number of items on one page
      * 
-     * @throws \InvalidArgumentException if limit is not higher than zero
+     * @throws \UnexpectedValueException if limit is not higher than zero
      */
     public function __construct($limit) {
         if (0 < (int) $limit) {
             $this->limit = (int) $limit;
         } else {
-            throw new \InvalidArgumentException('Method setLimit only accepts integer values higher than zero for parameter two. Input was: '.$limit);
+            throw new \UnexpectedValueException('Method setLimit only accepts integer values higher than zero for parameter two. Input was: '.$limit);
         }
 
         $this->cursor = 1;
@@ -49,20 +49,20 @@ class PageCalc {
      * @param int $cursor number of the first item
      * @param int $limit number of items on one page is optional
      * 
-     * @throws \InvalidArgumentException if value of parameter cursor makes pagination invalid
-     * @throws \InvalidArgumentException if value of parameter is not higher than zero
+     * @throws \UnexpectedValueException if value of parameter cursor makes pagination invalid
      */
     public function moveCursor($cursor, $limit = false) {
         $this->limit = ($limit) ? (int) $limit : $this->limit;
+
+        if (1 > (int) $cursor) {
+            $cursor = 1;
+        }
+
         // check for invalidity
        if(1 < $this->limit) {
             if(((int) $cursor % $this->limit) != 1) {
-                throw new \InvalidArgumentException('Invalid cursor position for limit ' .$limit. '. Input was: '.$cursor);
+                throw new \UnexpectedValueException('Invalid cursor position for limit ' .$limit. '. Input was: '.$cursor);
             }
-        }
-
-        if (1 > (int) $cursor) {
-            throw new \InvalidArgumentException('Method setCursor only accepts integer values higher than zero. Input was: '.$cursor);
         }
 
         $this->cursor = (int) $cursor;
@@ -81,14 +81,12 @@ class PageCalc {
      * 
      * @param int $page current page number
      * @param int $limit number of items on one page is optional
-     * 
-     * @throws InvalidArgumentException if parameter one is not higher than zero
      */
     public function gotoPage($page, $limit = false) {
         $this->limit = ($limit) ? (int) $limit : $this->limit;
 
         if (1 > (int) $page) {
-            throw new \InvalidArgumentException('Method page only accepts integer values higher than 0. Input was: '.$page);
+           $page = 1;
         }
         
         $this->page = (int) $page;

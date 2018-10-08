@@ -25,34 +25,31 @@ class PageCalcTest  extends TestCase {
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException UnexpectedValueException
      */
-    public function testConstructError() {
+    public function testConstructZero() {
         $page = new PageCalc(0);
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException UnexpectedValueException
      */
     public function testMoveErrorInvalid() {
         $page = new PageCalc(3);
         $page->moveCursor(3);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testMoveErrorValue() {
+    public function testMoveZero() {
         $page = new PageCalc(3);
         $page->moveCursor(0);
+        $this->assertEquals(1, $page->getCursor());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGotoErrorValue() {
+
+    public function testGotoZero() {
         $page = new PageCalc(3);
         $page->gotoPage(0);
+        $this->assertEquals(1, $page->getPage());
     }
 
     public function validStatesProvider() {
