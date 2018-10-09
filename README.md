@@ -16,7 +16,7 @@ It also calculates
 
 Install with composer:
 
-    composer require "ck/pagecalc"
+    composer require "ck/pagecalc:@dev"
 
 ## Usage example
 
