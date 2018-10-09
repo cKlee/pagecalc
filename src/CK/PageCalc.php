@@ -143,7 +143,8 @@ class PageCalc {
         if(1 == $this->limit) {
             return $total;
         }
-        return (floor($total / $this->limit) * $this->limit) - $this->limit + 1;
+
+        return ($this->limit > $total) ? 1 : ceil($total / $this->limit) * $this->limit - $this->limit + 1;
     }
 
     /**
