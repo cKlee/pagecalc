@@ -1,17 +1,21 @@
 <?php
-/*
-* (c) Carsten Klee <mailme.klee@yahoo.de>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+/**
+ * Calculates page numbers and cursors of paged results
+ * 
+ * It calculates the page number and cursor (first item number on the current page) vice versa.
+ * 
+ * @author Carsten Klee
+ * (c) Carsten Klee <mailme.klee@yahoo.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace CK;
 
 /**
  * A class to calculate page numbers and cursors of paged results
  * 
- * @author Carsten Klee
  */
 class PageCalc {
 
