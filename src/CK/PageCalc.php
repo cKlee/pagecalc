@@ -29,43 +29,62 @@ class PageCalc {
     protected $page;
 
     /**
-     * Construct and set defaults
+     * Sets the default limit. If limit is lower than one, default limit will be 1.
      * 
      * @param int $limit  Number of items on one page
      * 
-     * @throws \UnexpectedValueException if limit is not higher than zero
      */
     public function __construct($limit) {
-        if (0 < (int) $limit) {
-            $this->limit = (int) $limit;
-        } else {
-            throw new \UnexpectedValueException('Method setLimit only accepts integer values higher than zero for parameter two. Input was: '.$limit);
-        }
+        $this->setLimit($limit);
 
         $this->cursor = 1;
         $this->page = 1;
     }
 
+    /**
+     * Sets the limit
+     * 
+     * @param int the limit
+     */
+    private function setLimit($limit) {
+        if(!is_bool($limit)) {
+            if(1 > (int) $limit) {
+                $this->limit = 1;
+            } else {
+                $this->limit = (int) $limit;
+            }
+        }
+    }
 
     /**
      * Set current cursor and update current page
      * 
      * @param int $cursor number of the first item
      * @param int $limit number of items on one page is optional
-     * 
-     * @throws \UnexpectedValueException if value of parameter cursor makes pagination invalid
      */
     public function moveCursor($cursor, $limit = false) {
-        $this->limit = ($limit) ? (int) $limit : $this->limit;
+        $this->setLimit($limit);
 
         if (1 > (int) $cursor) {
             $cursor = 1;
         }
 
         // check for invalidity
-       if(1 < $this->limit) {
-            if(((int) $cursor % $this->limit) != 1) {
-                throw new \UnexpectedValueException('Invalid cursor position for limit ' .$limit. '. Input was: '.$cursor);
+        if(1 < $this->limit) {
+            $mod = (int) $cursor % $this->limit;
+            if(1 != $mod) {
+                $quot = (int) $cursor / $this->limit;
+                if((int)$cursor < $this->limit) {
+                    $cursor = 1;
+                } else if(0 == $mod) {
+                    if(1 == $quot) {
+                        $cursor = 1;
+                    } else {
+                        $cursor = ($quot - 1) * $this->limit + 1;
+                    }
+                } else {
+                    $cursor = floor($quot) * $this->limit  + 1;
+                }
             }
         }
 
@@ -87,7 +106,7 @@ class PageCalc {
      * @param int $limit number of items on one page is optional
      */
     public function gotoPage($page, $limit = false) {
-        $this->limit = ($limit) ? (int) $limit : $this->limit;
+        $this->setLimit($limit);
 
         if (1 > (int) $page) {
            $page = 1;

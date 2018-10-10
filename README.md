@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cKlee/pagecalc.svg?branch=master)](https://travis-ci.org/cKlee/pagecalc)
+
 # PageCalc
 
 It calculates the page number and cursor (first item number on the current page) vice versa.
@@ -60,21 +62,20 @@ echo $pc->getLastPage($total) .' is the last page and starts at '. $pc->getLastC
 
 ### __construct($limit)
 
-Throws UnexpectedValueException if limit is not higher than zero
+Sets the default limit. If limit is lower than one, default limit will be 1.
+
 
 ### moveCursor($cursor, $limit = false)
 
 Moves cursor, calcultes page number and optionally sets a new limit
 
-Throws UnexpectedValueException if cursor does not fit limit. E.g.
+Since cursor is always the first item number on the current page, cursor must be a multitude of the limit plus 1. If cursor number is not correct method moveCursor will correct this. E.g.:
 
 ```php
-try {
-    $pc->moveCursor(5, 3);
-} catch($e) {
-    echo $e->getMessage(); # Invalid cursor position for limit 3. Input was: 5
-}
-
+$pc = new PageCalc(3); // limit 3
+$pc->moveCursor(5); // cursor can't be 5
+echo $pc->getCursor(); // current cursor is now 4.
+//4 is the first item number on page 2, wich contains item number 5
 ```
 
 ### gotoPage($page, $limit = false)

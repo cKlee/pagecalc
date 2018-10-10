@@ -15,6 +15,7 @@ class PageCalcTest  extends TestCase {
 
     /**
      * @covers CK\PageCalc::__construct
+     * @covers CK\PageCalc::setLimit
      */
     public function testDefaults() {
         $page = new PageCalc(1);
@@ -24,19 +25,10 @@ class PageCalcTest  extends TestCase {
         $this->assertFalse($page->getPreviousPage());
     }
 
-    /**
-     * @expectedException UnexpectedValueException
-     */
+
     public function testConstructZero() {
         $page = new PageCalc(0);
-    }
-
-    /**
-     * @expectedException UnexpectedValueException
-     */
-    public function testMoveErrorInvalid() {
-        $page = new PageCalc(3);
-        $page->moveCursor(3);
+        $this->assertEquals(100, $page->getLastPage(100));
     }
 
     public function testMoveZero() {
@@ -70,7 +62,7 @@ class PageCalcTest  extends TestCase {
     public function testValidStates($state) {
         $page = new PageCalc(3);
         $page->moveCursor($state['cc'], $state['l']);
-        $this->assertEquals($state['cc'], $page->getCursor($state['cc']));
+        $this->assertEquals($state['cc'], $page->getCursor());
         $this->assertEquals($state['nc'], $page->getNextCursor($state['t']));
         $this->assertEquals($state['pc'], $page->getPreviousCursor());
         $this->assertEquals($state['lc'], $page->getLastCursor($state['t']));
@@ -81,7 +73,7 @@ class PageCalcTest  extends TestCase {
         $this->assertEquals($state['tp'], $page->getTotalPages($state['t']));
 
         $page->gotoPage($state['cp'], $state['l']);
-        $this->assertEquals($state['cc'], $page->getCursor($state['cc']));
+        $this->assertEquals($state['cc'], $page->getCursor());
         $this->assertEquals($state['nc'], $page->getNextCursor($state['t']));
         $this->assertEquals($state['pc'], $page->getPreviousCursor());
         $this->assertEquals($state['lc'], $page->getLastCursor($state['t']));
@@ -90,6 +82,16 @@ class PageCalcTest  extends TestCase {
         $this->assertEquals($state['pp'], $page->getPreviousPage());
         $this->assertEquals($state['lp'], $page->getLastPage($state['t']));
         $this->assertEquals($state['tp'], $page->getTotalPages($state['t']));
+    }
+
+    public function testInvalidCursor() {
+        $page = new PageCalc(3);
+        $page->moveCursor(2);
+        $this->assertEquals(1, $page->getCursor());
+        $page->moveCursor(3);
+        $this->assertEquals(1, $page->getCursor());
+        $page->moveCursor(5);
+        $this->assertEquals(4, $page->getCursor());
     }
 
 }
