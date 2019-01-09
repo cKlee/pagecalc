@@ -27,7 +27,7 @@ require '../vendor/autoload.php';
 
 use CK\PageCalc;
 
-$pc = new PageCalc(10) ; // Initiate with a default number of items on one page (limit)
+$pc = new PageCalc(20) ; // Initiate with a default number of items on one page (limit)
 
 // Someone makes a request on page 3 and a limit of 20 items on the page
 $pc->gotoPage($_GET['page'], $_GET['limit']);
