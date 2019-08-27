@@ -128,5 +128,11 @@ $total is the total number of items.
 
 Gets the total number of pages.
 
+### getNumberOfItems($total)
+
+$total is the total number of items.
+
+Get number of items on current page.
+
 
 

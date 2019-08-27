@@ -15,7 +15,6 @@ class PageCalcTest  extends TestCase {
 
     /**
      * @covers CK\PageCalc::__construct
-     * @covers CK\PageCalc::setLimit
      */
     public function testDefaults() {
         $page = new PageCalc(1);
@@ -46,12 +45,12 @@ class PageCalcTest  extends TestCase {
 
     public function validStatesProvider() {
         return $states = [
-            [['l' => 1, 't' => 1, 'cc' => 1, 'nc' => false, 'pc' => false, 'lc' => 1, 'cp' => 1, 'np' => false, 'pp' => false, 'lp' => 1, 'tp' => 1]],
-            [['l' => 1, 't' => 2, 'cc' => 1, 'nc' => 2, 'pc' => false, 'lc' => 2, 'cp' => 1, 'np' => 2, 'pp' => false, 'lp' => 2, 'tp' => 2]],
-            [['l' => 2, 't' => 1, 'cc' => 1, 'nc' => false, 'pc' => false, 'lc' => 1, 'cp' => 1, 'np' => false, 'pp' => false, 'lp' => 1, 'tp' => 1]],
-            [['l' => 3, 't' => 10, 'cc' => 4, 'nc' => 7, 'pc' => 1, 'lc' => 10, 'cp' => 2, 'np' => 3, 'pp' => 1, 'lp' => 4, 'tp' => 4]],
-            [['l' =>3 , 't' => 47, 'cc' => 10, 'nc' => 13, 'pc' => 7, 'lc' => 46, 'cp' => 4, 'np' => 5, 'pp' => 3, 'lp' => 16, 'tp' => 16]],
-            [['l' =>20 , 't' => 100, 'cc' => 41, 'nc' => 61, 'pc' => 21, 'lc' => 81, 'cp' => 3, 'np' => 4, 'pp' => 2, 'lp' => 5, 'tp' => 5]]
+            [['l' => 1, 't' => 1, 'cc' => 1, 'nc' => false, 'pc' => false, 'lc' => 1, 'cp' => 1, 'np' => false, 'pp' => false, 'lp' => 1, 'tp' => 1, 'ni' => 1]],
+            [['l' => 1, 't' => 2, 'cc' => 1, 'nc' => 2, 'pc' => false, 'lc' => 2, 'cp' => 1, 'np' => 2, 'pp' => false, 'lp' => 2, 'tp' => 2, 'ni' => 1]],
+            [['l' => 2, 't' => 1, 'cc' => 1, 'nc' => false, 'pc' => false, 'lc' => 1, 'cp' => 1, 'np' => false, 'pp' => false, 'lp' => 1, 'tp' => 1, 'ni' => 1]],
+            [['l' => 3, 't' => 10, 'cc' => 4, 'nc' => 7, 'pc' => 1, 'lc' => 10, 'cp' => 2, 'np' => 3, 'pp' => 1, 'lp' => 4, 'tp' => 4, 'ni' => 3]],
+            [['l' => 3 , 't' => 47, 'cc' => 10, 'nc' => 13, 'pc' => 7, 'lc' => 46, 'cp' => 4, 'np' => 5, 'pp' => 3, 'lp' => 16, 'tp' => 16, 'ni' => 3]],
+            [['l' => 20 , 't' => 100, 'cc' => 41, 'nc' => 61, 'pc' => 21, 'lc' => 81, 'cp' => 3, 'np' => 4, 'pp' => 2, 'lp' => 5, 'tp' => 5, 'ni' => 20]]
         ];
     }
 
@@ -71,6 +70,7 @@ class PageCalcTest  extends TestCase {
         $this->assertEquals($state['pp'], $page->getPreviousPage());
         $this->assertEquals($state['lp'], $page->getLastPage($state['t']));
         $this->assertEquals($state['tp'], $page->getTotalPages($state['t']));
+        $this->assertEquals($state['ni'], $page->getNumberOfItems($state['t']));
 
         $page->gotoPage($state['cp'], $state['l']);
         $this->assertEquals($state['cc'], $page->getCursor());
@@ -82,6 +82,7 @@ class PageCalcTest  extends TestCase {
         $this->assertEquals($state['pp'], $page->getPreviousPage());
         $this->assertEquals($state['lp'], $page->getLastPage($state['t']));
         $this->assertEquals($state['tp'], $page->getTotalPages($state['t']));
+        $this->assertEquals($state['ni'], $page->getNumberOfItems($state['t']));
     }
 
     public function testInvalidCursor() {

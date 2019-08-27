@@ -29,32 +29,22 @@ class PageCalc {
     protected $page;
 
     /**
-     * Sets the default limit. If limit is lower than one, default limit will be 1.
+     * Construct and set defaults
      * 
      * @param int $limit  Number of items on one page
      * 
      */
     public function __construct($limit) {
-        $this->setLimit($limit);
+        if(1 > (int) $limit) {
+            $limit = 1;
+        }
+
+        $this->limit = (int) $limit;
 
         $this->cursor = 1;
         $this->page = 1;
     }
 
-    /**
-     * Sets the limit
-     * 
-     * @param int the limit
-     */
-    private function setLimit($limit) {
-        if(!is_bool($limit)) {
-            if(1 > (int) $limit) {
-                $this->limit = 1;
-            } else {
-                $this->limit = (int) $limit;
-            }
-        }
-    }
 
     /**
      * Set current cursor and update current page
@@ -63,20 +53,20 @@ class PageCalc {
      * @param int $limit number of items on one page is optional
      */
     public function moveCursor($cursor, $limit = false) {
-        $this->setLimit($limit);
+        $this->limit = ($limit) ? (int) $limit : $this->limit;
 
         if (1 > (int) $cursor) {
             $cursor = 1;
         }
-
         // check for invalidity
-        if(1 < $this->limit) {
-            $mod = (int) $cursor % $this->limit;
+       if(1 < $this->limit) {
+           $mod = (int) $cursor % $this->limit;
             if(1 != $mod) {
                 $quot = (int) $cursor / $this->limit;
                 if((int)$cursor < $this->limit) {
                     $cursor = 1;
                 } else if(0 == $mod) {
+                    
                     if(1 == $quot) {
                         $cursor = 1;
                     } else {
@@ -87,9 +77,7 @@ class PageCalc {
                 }
             }
         }
-
         $this->cursor = (int) $cursor;
-
         // update current page
         if(1 == $this->cursor) {
             $this->page = 1;
@@ -106,14 +94,12 @@ class PageCalc {
      * @param int $limit number of items on one page is optional
      */
     public function gotoPage($page, $limit = false) {
-        $this->setLimit($limit);
-
+        $this->limit = ($limit) ? (int) $limit : $this->limit;
         if (1 > (int) $page) {
            $page = 1;
         }
         
         $this->page = (int) $page;
-
         // update cursor
         if(1 == $this->page) {
             $this->cursor = 1;
@@ -166,8 +152,25 @@ class PageCalc {
         if(1 == $this->limit) {
             return $total;
         }
-
         return ($this->limit > $total) ? 1 : ceil($total / $this->limit) * $this->limit - $this->limit + 1;
+    }
+
+    /**
+     * Get number of items on current page
+     * 
+     * @param int $total total number of items
+     * 
+     * @return int number of last cursor
+     */
+    public function getNumberOfItems($total) {
+        if($this->limit == $this->page) {
+            return $this->limit;
+        }
+        if($this->page != $this->getTotalPages($total)) {
+            return $this->limit;
+        } else {
+            return (0 === ($rest = $total % $this->limit)) ? $total : $rest;
+        }
     }
 
     /**
@@ -218,5 +221,4 @@ class PageCalc {
     public function getPreviousPage() {
         return (1 < $this->page) ? $this->page - 1 : false;
     }
-
 }
